@@ -1,0 +1,14 @@
+{
+    "manifest_version": 2,
+    "name":"bookmarks",
+    "version":"1",
+    "permissions":["tabs", "activeTab"],
+    "content_scripts":[
+        {
+            "matches": ["http://*/*", "https://*/*"],
+            "js":["main.js"],
+            "css":["style.css"]
+        }
+    ]
+
+}

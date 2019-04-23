@@ -1,0 +1,20 @@
+
+#bookmarkpanel {
+    z-index: 99999;
+    background: rgba(255, 255, 255, 0.8);
+    color: #000;
+    position: absolute;
+    top: 0px;
+    padding: 5px;
+    margin: 10px;
+    border-radius: 5px;
+}
+
+#bookmarkpanel .mark {
+    border-bottom: 1px solid #999;
+}
+
+#bookmarkpanel .mark:last-child{
+    border-bottom: none;
+}
+
