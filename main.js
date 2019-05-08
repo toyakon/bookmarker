@@ -1,10 +1,10 @@
 
 function createBookMarkPanel () {
-    let panel = document.querySelector("#bookmarkpanel")
+    let panel = document.querySelector('#bookmarkpanel')
     if (panel)
         return
 
-    panel = document.createElement("div")
+    panel = document.createElement('div')
     panel.id = "bookmarkpanel"
     panel.style.display = "none"
 
@@ -12,9 +12,9 @@ function createBookMarkPanel () {
     body.appendChild(panel)
 }
 
-function showList () {
+async function showList () {
 
-    let bookmark = JSON.parse(localStorage.getItem("bookmark"))
+    let bookmark = await getStorage()
     let panel = document.querySelector("#bookmarkpanel")
 
     panel.textContent = Object.keys(bookmark).length ? "" : "no bookmark"
@@ -32,15 +32,15 @@ function showList () {
 var old_key = {}
 const form_element = ["INPUT", "TEXTAREA"]
 const predefined_key = ["r", "d", "m"]
-function keyDown (e) {
+async function keyDown (e) {
     if (form_element.includes(e.srcElement.tagName))
         return
 
-    let bookmark = JSON.parse(localStorage.getItem("bookmark"))
+    let bookmark = await getStorage()
     let now = new Date()
     let diff = now - old_key.time
 
-    if (old_key.key === "m" && diff < 500) {
+    if (old_key.key === "m" && diff < 500) {      
         if (e.key === "m") {
             showList()
             return
@@ -49,26 +49,31 @@ function keyDown (e) {
             return
         }
         bookmark[e.key] = {url:window.location.href, title:document.title}
+      chrome.storage.local.set(bookmark)
     } else if (old_key.key === "d" && diff < 500) {
-        delete bookmark[e.key]
-    } else if (bookmark[e.key]) {
+        chrome.storage.local.remove(e.key)
+    } else if(bookmark[e.key]){
         window.location.href = bookmark[e.key].url
     }
-    let mark = JSON.stringify(bookmark)
-    localStorage.setItem("bookmark", mark)
     old_key.key = e.key
     old_key.time = now
 }
 
+function getStorage() {
+  return new Promise(resolve =>{
+    chrome.storage.local.get(null, item=>{
+      resolve(item)
+    })
+  })
+}
 function createBookMark () {
-    let bookmark = localStorage.getItem("bookmark")
-    if (!bookmark) {
-        localStorage.setItem("bookmark", "{}")
-    }
-
+   chrome.storage.local.get('bookmark', (item)=>{
+     if(!item)
+      chrome.storage.local.set('bookmark', {})
+   })
 }
 window.onload = () => {
-    createBookMark()
+    //createBookMark()
     createBookMarkPanel()
     document.addEventListener("keydown", (e)=>{
         keyDown(e)
