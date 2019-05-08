@@ -23,6 +23,3 @@ Did you forget the mark? At that time, please try to press "mm". You should look
 
 Do you want to erase the mark? In such a case, press "d" and then the mark you want to delete to complete the deletion.
 
-## caution
-
-Marks can only be used within the same origin.
